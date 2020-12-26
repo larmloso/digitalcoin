@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../dto/symbol.dart';
-import '../services/bitkub_service.dart';
+import 'dart:convert';
+import 'dart:convert' as convert;
+import 'dart:convert' show utf8;
+
+import 'package:digitalcoin/widgets/widgets.dart';
+import 'package:http/http.dart' as http;
 
 class StatsGrid2 extends StatefulWidget {
   @override
@@ -9,16 +13,37 @@ class StatsGrid2 extends StatefulWidget {
 }
 
 class _StatsGrid2State extends State<StatsGrid2> {
-  Future fetchCoins() async {
-    print('fetchCoins');
-    return await BitkubService().getSymbols();
+  var groupdata = [];
+
+  void initState() {
+    super.initState();
+    this.getData();
+  }
+
+  void getData() async {
+    final response = await http.get('https://api.bitkub.com/api/market/ticker');
+    String _body = utf8.decode(response.bodyBytes);
+
+    setState(() {
+      Map<String, dynamic> mapTickets = convert.jsonDecode(_body);
+      mapTickets.forEach((key, value) {
+        print(value["last"]);
+        var data = {
+          "key": key,
+          "last": value["last"],
+          "vol": value["baseVolume"]
+        };
+        groupdata.add(data);
+        //groupdata.add(value);
+      });
+      //print(groupdata);
+      //groupdata.map((e) => print(e.toString()));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     String str = 'hello';
-
-    fetchCoins().then((value) => value.forEach((e) {}));
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.3,

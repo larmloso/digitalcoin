@@ -21,13 +21,6 @@ class _ListScreenState extends State<ListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // setState(() {
-    //   fetchCoins().then((value) => value.forEach((e) {
-          
-    //       }));
-    // });
-
-    //tickers.forEach((element) { print(element.baseVolume);});
     print(fetchCoins().toString());
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,18 +46,21 @@ class _ListScreenState extends State<ListScreen> {
                 );
               } else {
                 return ListView.builder(
+                  padding: EdgeInsets.all(10.0),
                     itemCount:
                         (tickerSnap.data == null) ? 0 : tickerSnap.data.length,
                     itemBuilder: (contex, index) {
+                      //print(tickerSnap);
                       Ticker ticker = tickerSnap.data[index];
-                      return Column(
-                        children: <Widget>[
-                          ListTile(
-                            leading: Icon(Icons.monetization_on),
-                            title: Text(ticker.key),
-                            subtitle: Text(ticker.last.toString()),
-                          ),
-                        ],
+
+                      return Card(
+                        
+                        child: ListTile(
+                          leading: Icon(Icons.monetization_on),
+                          title: Text(ticker.key),
+                          subtitle: Text(ticker.last.toString()),
+                          
+                        ),
                       );
                     });
               }

@@ -1,7 +1,6 @@
 import 'package:digitalcoin/screens/list_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens.dart';
-import 'package:digitalcoin/pages/non_secure_api.dart';
 
 class BottomNavScreen extends StatefulWidget {
   @override
@@ -12,6 +11,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   final List _screens = [
     HomeScreen(),
     ListScreen(),
+    ListviewScreen(),
     Scaffold(),
   ];
 
@@ -30,7 +30,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey,
         elevation: 0.0,
-        items: [Icons.home, Icons.insert_chart]
+        items: [Icons.home, Icons.addchart_rounded, Icons.tram_rounded]
             .asMap()
             .map((key, value) => MapEntry(
                   key,
