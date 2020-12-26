@@ -1,0 +1,5 @@
+{
+    "bitkub.endpoint" : "https://api.bitkub.com",
+    "bitkub.apikey" : "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "bitkub.apisecret" : "xxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  }
