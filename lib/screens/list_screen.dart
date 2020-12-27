@@ -19,6 +19,20 @@ class _ListScreenState extends State<ListScreen> {
     return await BitkubService().getSymbols();
   }
 
+    bool isFavorited = true;
+  int favoriteCount = 41;
+
+  void _handleTap() {
+    setState(() {
+      isFavorited = !isFavorited;
+      if (isFavorited) {
+        favoriteCount += 1;
+      } else {
+        favoriteCount -= 1;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     print(fetchCoins().toString());
@@ -46,20 +60,43 @@ class _ListScreenState extends State<ListScreen> {
                 );
               } else {
                 return ListView.builder(
-                  padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.all(10.0),
                     itemCount:
                         (tickerSnap.data == null) ? 0 : tickerSnap.data.length,
                     itemBuilder: (contex, index) {
                       //print(tickerSnap);
                       Ticker ticker = tickerSnap.data[index];
-
                       return Card(
-                        
                         child: ListTile(
-                          leading: Icon(Icons.monetization_on),
-                          title: Text(ticker.key),
-                          subtitle: Text(ticker.last.toString()),
-                          
+                          leading: CircleAvatar(
+                            radius: 30.0,
+                            foregroundColor: Colors.green,
+                            backgroundImage: NetworkImage(
+                                'https://bitcoin.org/img/icons/opengraph.png?1608131429'),
+                          ),
+                          title: Text(
+                            ticker.key,
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                            ),
+                          ),
+                          subtitle: Text(
+                            ticker.last.toString(),
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              color: Colors.green,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            alignment: Alignment.centerRight,
+                            icon: (isFavorited
+                                ? Icon(Icons.bookmark_border)
+                                : Icon(Icons.bookmark)),
+                            color: Colors.orange,
+                            onPressed: _handleTap,
+                          ),
                         ),
                       );
                     });

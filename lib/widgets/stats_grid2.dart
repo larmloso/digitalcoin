@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'dart:convert';
 import 'dart:convert' as convert;
 import 'dart:convert' show utf8;
-
-import 'package:digitalcoin/widgets/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class StatsGrid2 extends StatefulWidget {
@@ -14,6 +10,9 @@ class StatsGrid2 extends StatefulWidget {
 
 class _StatsGrid2State extends State<StatsGrid2> {
   var groupdata = [];
+  var grouptopdata = [];
+  var populardata = [];
+  var topgainer = [];
 
   void initState() {
     super.initState();
@@ -27,27 +26,34 @@ class _StatsGrid2State extends State<StatsGrid2> {
     setState(() {
       Map<String, dynamic> mapTickets = convert.jsonDecode(_body);
       mapTickets.forEach((key, value) {
-        print(value["last"]);
         var data = {
           "key": key,
           "last": value["last"],
-          "vol": value["baseVolume"]
+          "vol": value["baseVolume"],
+          "percentChange": value["percentChange"]
         };
         groupdata.add(data);
-        //groupdata.add(value);
+        // grouptopdata.add(data);
       });
-      //print(groupdata);
-      //groupdata.map((e) => print(e.toString()));
+      groupdata.sort((a, b) => (b["last"]).compareTo(a["last"]));
+      // grouptopdata.sort((a, b) => (b["percentChange"]).compareTo(a["percentChange"]));
+
+      groupdata.forEach((element) {
+        var newData = {"key": element["key"], "last": element["last"]};
+        populardata.add(newData);
+      });
+      // grouptopdata.forEach((element) {
+      //   var newData = {"key": element["key"], "per": element["percentChange"]};
+      //   topgainer.add(newData);
+      // });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    String str = 'hello';
-
+    //print('1');
     return Container(
-      height: MediaQuery.of(context).size.height * 0.3,
-      //color: Colors.yellow,
+      height: MediaQuery.of(context).size.height * 0.35,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -61,17 +67,22 @@ class _StatsGrid2State extends State<StatsGrid2> {
           Flexible(
             child: Row(
               children: [
-                _buildStatCard('$str', '756,995.29', Colors.orange),
-                _buildStatCard('ETH/THB', '18,000.33', Colors.red),
+                _buildStatCard(populardata[0]["key"],
+                    populardata[0]["last"].toString(), Colors.orange),
+                _buildStatCard(populardata[1]["key"],
+                    populardata[1]["last"].toString(), Colors.red),
               ],
             ),
           ),
           Flexible(
             child: Row(
               children: [
-                _buildStatCard('XRP/THB', '9.85', Colors.green),
-                _buildStatCard('ZIL/THB', '2.12', Colors.lightBlue),
-                _buildStatCard('DOG/THB', '9.53', Colors.purple),
+                _buildStatCard(populardata[2]["key"].toString(),
+                    populardata[2]["last"].toString(), Colors.green),
+                _buildStatCard(populardata[3]["key"].toString(),
+                    populardata[3]["last"].toString(), Colors.lightBlue),
+                _buildStatCard(populardata[4]["key"].toString(),
+                    populardata[4]["last"].toString(), Colors.purple),
               ],
             ),
           ),
@@ -103,6 +114,14 @@ class _StatsGrid2State extends State<StatsGrid2> {
             ),
             Text(
               count,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              " ≈ 1",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20.0,

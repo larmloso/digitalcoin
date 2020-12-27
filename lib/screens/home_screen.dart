@@ -4,14 +4,62 @@ import 'package:digitalcoin/config/styles.dart';
 import 'package:digitalcoin/widgets/widgets.dart';
 import 'package:digitalcoin/data/data.dart';
 
+import 'dart:convert' as convert;
+import 'dart:convert' show utf8;
+import 'package:http/http.dart' as http;
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var groupdata = [];
+  var grouptopdata = [];
 
-  
+  var populardata = [];
+  var topgainer = [];
+
+  void initState() {
+    super.initState();
+    this.getData();
+  }
+
+  void getData() async {
+    final response = await http.get('https://api.bitkub.com/api/market/ticker');
+    String _body = utf8.decode(response.bodyBytes);
+
+    setState(() {
+      Map<String, dynamic> mapTickets = convert.jsonDecode(_body);
+      mapTickets.forEach((key, value) {
+        var data = {
+          "key": key,
+          "last": value["last"],
+          "vol": value["baseVolume"],
+          "percentChange": value["percentChange"]
+        };
+        groupdata.add(data);
+        grouptopdata.add(data);
+      });
+      groupdata.sort((a, b) => (b["last"]).compareTo(a["last"]));
+      grouptopdata
+          .sort((a, b) => (b["percentChange"]).compareTo(a["percentChange"]));
+
+      groupdata.forEach((element) {
+        var newData = {"key": element["key"], "last": element["last"]};
+        populardata.add(newData);
+      });
+      grouptopdata.forEach((element) {
+        var newData = {"key": element["key"], "per": element["percentChange"]};
+        if (topgainer.length < 3) {
+          topgainer.add(newData);
+        }
+      });
+    });
+
+    print(topgainer);
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -21,8 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
         physics: ClampingScrollPhysics(),
         slivers: [
           _buildHeader(screenHeight),
-          _buildPreventionTips(screenHeight),
-          // _buildYourOwnTest(screenHeight),
+          _buildPreventionTips(screenHeight, topgainer),
           SliverPadding(
             padding: EdgeInsets.symmetric(
               horizontal: 10.0,
@@ -31,8 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: StatsGrid2(),
             ),
           ),
-          
-         
         ],
       ),
     );
@@ -41,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
   SliverToBoxAdapter _buildHeader(double screenHeight) {
     return SliverToBoxAdapter(
       child: Container(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(1.0),
         decoration: BoxDecoration(
           color: Palette.primaryColor,
           borderRadius: BorderRadius.only(
@@ -56,38 +101,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           padding: const EdgeInsets.all(10.0),
           height: screenHeight * 0.2,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Palette.primaryColor, Color(0xFFAD9FE4)],
-            ),
-            borderRadius: BorderRadius.circular(20.0),
-          ),
+          // decoration: BoxDecoration(
+          //   gradient: LinearGradient(
+          //     colors: [Color(0xFFAD9FE4), Palette.primaryColor],
+          //   ),
+          //   borderRadius: BorderRadius.circular(50.0),
+          // ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Image.asset('assets/images/own_test.png'),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Cryptocurrency!',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: screenHeight * 0.01),
-                  Text(
-                    'Digital assets designed as\na medium of exchange.',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                    maxLines: 2,
-                  ),
-                ],
-              ),
+              Image.network('https://www.pngarts.com/files/3/Bitcoin-PNG-Pic.png', height: screenHeight * 0.14)
             ],
           ),
         ),
@@ -95,7 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  SliverToBoxAdapter _buildPreventionTips(double screenHeight) {
+  SliverToBoxAdapter _buildPreventionTips(double screenHeight, List topgainer) {
+    //print(topgainer);
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.all(20.0),
@@ -113,27 +136,21 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: prevention
-                  .map(
-                    (e) => Column(
-                      children: [
-                        Image.asset(
-                          e.keys.first,
-                          height: screenHeight * 0.12,
-                        ),
-                        SizedBox(height: screenHeight * 0.015),
-                        Text(
-                          e.values.first,
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
+              children: topgainer.map((e) {
+                return Column(
+                  children: [
+                    Image.network(
+                      'https://cdn.pixabay.com/photo/2019/12/31/18/53/chart-4732546_960_720.png',
+                      height: screenHeight * 0.12,
                     ),
-                  )
-                  .toList(),
+                    SizedBox(height: screenHeight * 0.015),
+                    ///Icon(Icons.money_off_csred_outlined),
+                    Text(e["key"], style: TextStyle(fontWeight: FontWeight.bold),),
+                    SizedBox(height: screenHeight * 0.015),
+                    Text(e["per"].toString() + " %"),
+                  ],
+                );
+              }).toList(),
             ),
           ],
         ),

@@ -1,3 +1,4 @@
+import 'package:digitalcoin/config/palette.dart';
 import 'package:digitalcoin/screens/list_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens.dart';
@@ -27,10 +28,10 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
         //backgroundColor: Colors.white,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        selectedItemColor: Colors.white,
+        selectedItemColor: Palette.primaryColor,
         unselectedItemColor: Colors.grey,
         elevation: 0.0,
-        items: [Icons.home, Icons.addchart_rounded, Icons.tram_rounded]
+        items: [Icons.home_outlined, Icons.addchart_rounded, Icons.account_balance_wallet_outlined]
             .asMap()
             .map((key, value) => MapEntry(
                   key,
@@ -41,12 +42,12 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
                         vertical: 6.0,
                         horizontal: 16.0,
                       ),
-                      decoration: BoxDecoration(
-                        color: _currentIndex == key
-                            ? Colors.blue[600]
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
+                      // decoration: BoxDecoration(
+                      //   color: _currentIndex == key
+                      //       ? Colors.blue[600]
+                      //       : Colors.transparent,
+                      //   borderRadius: BorderRadius.circular(20.0),
+                      // ),
                       child: Icon(value),
                     ),
                   ),

@@ -15,6 +15,20 @@ class ListviewScreen extends StatefulWidget {
 class _ListviewScreenState extends State<ListviewScreen> {
   var groupdata = [];
 
+  bool isFavorited = true;
+  int favoriteCount = 41;
+
+  void _handleTap() {
+    setState(() {
+      isFavorited = !isFavorited;
+      if (isFavorited) {
+        favoriteCount += 1;
+      } else {
+        favoriteCount -= 1;
+      }
+    });
+  }
+
   void initState() {
     super.initState();
     this.getData();
@@ -27,17 +41,14 @@ class _ListviewScreenState extends State<ListviewScreen> {
     setState(() {
       Map<String, dynamic> mapTickets = convert.jsonDecode(_body);
       mapTickets.forEach((key, value) {
-        print(value["last"]);
+        //print(value["last"]);
         var data = {
           "key": key,
           "last": value["last"],
           "vol": value["baseVolume"]
         };
         groupdata.add(data);
-        //groupdata.add(value);
       });
-      //print(groupdata);
-      //groupdata.map((e) => print(e.toString()));
     });
   }
 
@@ -65,7 +76,20 @@ class _ListviewScreenState extends State<ListviewScreen> {
               style: TextStyle(color: Colors.green),
             ),
             subtitle: Text("Vol:  " + e["vol"].toString()),
-            leading: Image.asset('assets/images/THB_ABT.png'),
+            leading: CircleAvatar(
+              radius: 30.0,
+              foregroundColor: Colors.green,
+              backgroundImage: NetworkImage(
+                  'https://pgslotvip.game/wp-content/uploads/2020/11/672E0179-5760-45F2-B8F5-F0E3ADB5FC8F-1.jpeg'),
+            ),
+            trailing: IconButton(
+              alignment: Alignment.centerRight,
+              icon: (isFavorited
+                  ? Icon(Icons.bookmark_border)
+                  : Icon(Icons.bookmark)),
+              color: Colors.orange,
+              onPressed: _handleTap,
+            ),
           ),
         );
       }).toList(),
