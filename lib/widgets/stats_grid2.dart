@@ -57,8 +57,9 @@ class _StatsGrid2State extends State<StatsGrid2> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 10.0),
           Text(
-            '  Popular 55',
+            '  Popular',
             style: TextStyle(
               fontSize: 22.0,
               fontWeight: FontWeight.w600,

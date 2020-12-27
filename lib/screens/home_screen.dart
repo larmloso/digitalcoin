@@ -101,15 +101,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           padding: const EdgeInsets.all(10.0),
           height: screenHeight * 0.2,
-          // decoration: BoxDecoration(
-          //   gradient: LinearGradient(
-          //     colors: [Color(0xFFAD9FE4), Palette.primaryColor],
-          //   ),
-          //   borderRadius: BorderRadius.circular(50.0),
-          // ),
           child: Row(
             children: [
-              Image.network('https://www.pngarts.com/files/3/Bitcoin-PNG-Pic.png', height: screenHeight * 0.14)
+              Image.network(
+                  'https://www.pngarts.com/files/3/Bitcoin-PNG-Pic.png',
+                  height: screenHeight * 0.14)
             ],
           ),
         ),
@@ -122,7 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.all(20.0),
-        //color: Colors.orange,
+        //margin: EdgeInsets.all(10.0),
+        color: Colors.grey[200],
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -144,10 +141,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: screenHeight * 0.12,
                     ),
                     SizedBox(height: screenHeight * 0.015),
+
                     ///Icon(Icons.money_off_csred_outlined),
-                    Text(e["key"], style: TextStyle(fontWeight: FontWeight.bold),),
+                    Text(
+                      e["key"],
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     SizedBox(height: screenHeight * 0.015),
-                    Text(e["per"].toString() + " %"),
+                    Text(
+                      e["per"].toString() + " %",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
                   ],
                 );
               }).toList(),

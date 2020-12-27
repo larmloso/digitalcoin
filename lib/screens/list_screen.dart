@@ -78,12 +78,11 @@ class _ListScreenState extends State<ListScreen> {
                             ticker.key,
                             style: TextStyle(
                               fontSize: 18.0,
-                              fontWeight: FontWeight.w400,
                               color: Colors.black,
                             ),
                           ),
                           subtitle: Text(
-                            ticker.last.toString(),
+                            ticker.last.toString() + " = 1",
                             style: TextStyle(
                               fontSize: 15.0,
                               color: Colors.green,
